@@ -1,0 +1,47 @@
+STIL 1.0;
+
+Signals {
+    "clk" In;
+    "rst" In;
+    "enable" In;
+    "data_in"[15:0] In;
+    "crc_out"[15:0] Out;
+}
+
+
+SignalGroups {
+    inputs = "data_in";
+    outputs = "crc_out";
+};
+
+ClockDefs {
+    clk {
+        Period 100ns;
+        Waveform { 0ns Low; 50ns High; }
+    }
+};
+
+WaveformTable WT {
+    Period 100ns;
+    Waveforms {
+        data_in   { 0ns D; }
+        crc_out   { 0ns C; }
+    }
+};
+
+Timing {
+    TimingSpec "ts1" {
+        WaveformTable WT;
+        ScanWaveform default {
+            Clocks = "clk";
+        }
+    }
+};
+
+PatternBurst burst1 {
+    TimingSpec ts1;
+    Vector (1 0001001000110100 0000000000000000);
+    Vector (1 0000000000000000 0001001111000110);
+    Vector (1 1111111111111111 1110111110101010);
+    Vector (1 1000000000000000 0000100100100011);
+};
